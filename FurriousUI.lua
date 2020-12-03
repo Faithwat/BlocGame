@@ -10,6 +10,8 @@ local AntiInfection = Instance.new("TextButton")
 local Noclip = Instance.new("TextButton")
 local Clip = Instance.new("TextButton")
 local Information = Instance.new("TextLabel")
+local cmdp = game:GetService("Players")
+local cmdlp = cmdp.LocalPlayer
  
 FurriousUI.Name = "FurriousUI"
 FurriousUI.Parent = game.CoreGui
@@ -113,15 +115,37 @@ Information.TextSize = 15.000
  
 Topframe.Active = true
 Topframe.Draggable = true
+
+function gamepassItems()
+    game:GetService("ReplicatedStorage").ToolPurchase:FireServer("InfectedBasherPan")
+    game:GetService("ReplicatedStorage").ToolPurchase:FireServer("InfectedBasherBat")
+    game:GetService("ReplicatedStorage").ToolPurchase:FireServer("FlameThrower")
+end
+
+if Noclipping then
+    Noclipping:Disconnect()
+end
+Clip1 = true
+function noclip()
+    Clip1 = false
+    function NoclipLoop()
+        if Clip1 == false and cmdlp.Character ~= nil then
+            for _, child in pairs(cmdlp.Character:GetDescendants()) do
+                if child:IsA("BasePart") and child.CanCollide == true then
+                    child.CanCollide = false
+                end
+            end
+        end
+    end
+    Noclipping = game:GetService('RunService').Stepped:connect(NoclipLoop)
+end
  
 Close.MouseButton1Click:Connect(function()
     FurriousUI:Destroy()
 end)
  
 Gamepass.MouseButton1Click:Connect(function()
-    game:GetService("ReplicatedStorage").ToolPurchase:FireServer("InfectedBasherPan")
-    game:GetService("ReplicatedStorage").ToolPurchase:FireServer("InfectedBasherBat")
-    game:GetService("ReplicatedStorage").ToolPurchase:FireServer("FlameThrower")
+    gamepassItems()
 end)
  
 AntiInfection.MouseButton1Click:Connect(function()
@@ -131,33 +155,37 @@ AntiInfection.MouseButton1Click:Connect(function()
 end)
  
 Noclip.MouseButton1Click:Connect(function()
-    local noclip = true char = game.Players.LocalPlayer.Character while true do if noclip == true then for _,v in pairs(char:children()) do pcall(function() if v.className == "Part" then v.CanCollide = false elseif v.ClassName == "Model" then v.Head.CanCollide = false end end) end end game:service("RunService").Stepped:wait() end
+    noclip()
 end)
  
 Clip.MouseButton1Click:Connect(function()
-    local noclip = true char = game.Players.LocalPlayer.Character while true do if noclip == true then for _,v in pairs(char:children()) do pcall(function() if v.className == "Part" then v.CanCollide = true elseif v.ClassName == "Model" then v.Head.CanCollide = true end end) end end game:service("RunService").Stepped:wait() end
+    if Noclipping then
+        Noclipping:Disconnect()
+    end
+    Clip1 = true
 end)
  
  
 function onKeyPress(inputObject, gameProcessedEvent)
     if inputObject.KeyCode == Enum.KeyCode.N then
-        local noclip = true char = game.Players.LocalPlayer.Character while true do if noclip == true then for _,v in pairs(char:children()) do pcall(function() if v.className == "Part" then v.CanCollide = false elseif v.ClassName == "Model" then v.Head.CanCollide = false end end) end end game:service("RunService").Stepped:wait() end
+        noclip()
     end
 end
 game:GetService("UserInputService").InputBegan:connect(onKeyPress)
  
 function onKeyPress(inputObject, gameProcessedEvent)
     if inputObject.KeyCode == Enum.KeyCode.C then
-        local noclip = true char = game.Players.LocalPlayer.Character while true do if noclip == true then for _,v in pairs(char:children()) do pcall(function() if v.className == "Part" then v.CanCollide = true elseif v.ClassName == "Model" then v.Head.CanCollide = true end end) end end game:service("RunService").Stepped:wait() end
+        if Noclipping then
+            Noclipping:Disconnect()
+        end
+        Clip1 = true
     end
 end
 game:GetService("UserInputService").InputBegan:connect(onKeyPress)
  
 function onKeyPress(inputObject, gameProcessedEvent)
     if inputObject.KeyCode == Enum.KeyCode.Z then
-        game:GetService("ReplicatedStorage").ToolPurchase:FireServer("InfectedBasherPan")
-        game:GetService("ReplicatedStorage").ToolPurchase:FireServer("InfectedBasherBat")
-        game:GetService("ReplicatedStorage").ToolPurchase:FireServer("FlameThrower")
+        gamepassItems()
     end
 end
 game:GetService("UserInputService").InputBegan:connect(onKeyPress)
