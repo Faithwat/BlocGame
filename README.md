@@ -1,4 +1,1 @@
-# BlocGame
-blocgamestuff
-
-Have fun :3
+Have fun with furry script
